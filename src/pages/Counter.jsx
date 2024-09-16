@@ -14,7 +14,7 @@ const Counter = () => {
       <button onClick={() => dispatch(increase())} className="bg-primary">
         Artı
       </button>
-      <button onClick={()=>dispatch(setCount(0))}>Sıfırla</button>
+      <button onClick={()=>dispatch(setCount(100))}>Sıfırla</button>
     </div>
   );
 };
