@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { Button, ButtonGroup, Stack, Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FormModal from "../components/FormModal";
+import { deleteTask } from "../redux/slices/crudSlice";
 
 const CrudPage = () => {
   const counterState = useSelector((store) => store.counterSlice);
   const crudState = useSelector((store) => store.crudSlice);
+  const dispatch = useDispatch();
   // console.log(crudState);
 
   // modal açılacak mı state'i
   const [isOpen, setIsOpen] = useState(false);
 
+  const [editItem, setEditItem] = useState(null);
   return (
     <div className="px-3">
       <Stack className="align-items-end my-4">
@@ -19,7 +22,14 @@ const CrudPage = () => {
 
       {/* Form Modal'ı */}
 
-      <FormModal isOpen={isOpen} close={()=>setIsOpen(false)} />
+      <FormModal
+        isOpen={isOpen}
+        editItem={editItem}
+        close={() => {
+          setIsOpen(false);
+          setEditItem(null);
+        }}
+      />
 
       <Table
         striped
@@ -48,8 +58,20 @@ const CrudPage = () => {
               <td>{task.end_date}</td>
               <td>
                 <ButtonGroup size="sm">
-                  <Button variant="danger">Sil</Button>
-                  <Button>Düzenle</Button>
+                  <Button
+                    onClick={() => dispatch(deleteTask(task.id))}
+                    variant="danger"
+                  >
+                    Sil
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setEditItem(task);
+                      setIsOpen(true);
+                    }}
+                  >
+                    Düzenle
+                  </Button>
                 </ButtonGroup>
               </td>
             </tr>

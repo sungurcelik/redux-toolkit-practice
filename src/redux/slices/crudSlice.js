@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { v4 } from "uuid";
 
 const initialState = {
   tasks: [
@@ -23,9 +24,29 @@ const crudSlice = createSlice({
   name: "crud",
   initialState,
   reducers: {
-    addTask: (state, action) => {},
-    editTask: (state, action) => {},
-    deleteTask: (state, action) => {},
+    addTask: (state, action) => {
+      // a) todo'ya id ekle
+      action.payload.id = v4();
+      // b) veriyi tasklerin arasına ekle
+      state.tasks.push(action.payload);
+    },
+    deleteTask: (state, action) => {
+      // 1. Yöntem filter
+      // const filtered = state.tasks.filter((task) => task.id !== action.payload);
+      // state.tasks = filtered;
+      // 2. Yöntem splice
+      // a) silinecek elemanın sırasını bulma
+      const i = state.tasks.findIndex((t) => t.id === action.payload);
+      // elemanı diziden kaldırma
+      state.tasks.splice(i, 1);
+    },
+    editTask: (state, action) => {
+      // güncellenecek elemanın dizideki sırasını bul
+      const i = state.tasks.findIndex((t) => t.id === action.payload.id);
+
+      //elemanı güncelle
+      state.tasks.splice(i, 1, action.payload);
+    },
   },
 });
 
